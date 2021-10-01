@@ -1,5 +1,5 @@
 ChangeLog
-v0.0.1
+v0.1
 
 - Ajout Entity Chaaracter
 - Ajout .htaccess
