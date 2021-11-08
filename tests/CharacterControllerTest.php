@@ -12,8 +12,7 @@ class CharacterControllerTest extends WebTestCase
     public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/character');
-
+        $client->request('GET', '/character/index');
         $this->assertJsonResponse($client->getResponse());
     }
 
@@ -35,5 +34,12 @@ class CharacterControllerTest extends WebTestCase
     {
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
+    }
+
+    public function testRedirectIndex(){
+        $client = static::createClient();
+        $client->request('GET', '/character');
+
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 }

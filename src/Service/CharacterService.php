@@ -5,13 +5,17 @@ namespace App\Service;
 use DateTime;
 use App\Entity\Character;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CharacterRepository;
 
 class CharacterService implements CharacterServiceInterface
 {
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    private $characterRepository;
+
+    public function __construct(CharacterRepository $characterRepository, EntityManagerInterface $em)
     {
+        $this->characterRepository = $characterRepository;
         $this->em = $em;
     }
     /**
@@ -32,8 +36,20 @@ class CharacterService implements CharacterServiceInterface
             ->setCreation(new \DateTime())
             ->setIdentifier(hash('sha1', uniqid()));
 
-            $this->em->persist($character);
-            $this->em->flush();
-            return $character;
+        $this->em->persist($character);
+        $this->em->flush();
+        return $character;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAll(){
+        $characterFinal = array();
+        $characters = $this->characterRepository->findAll();
+        foreach ($characters as $character){
+            $charactersFinal[] = $character->toArray();
+        }
+        return $charactersFinal;
     }
 }
