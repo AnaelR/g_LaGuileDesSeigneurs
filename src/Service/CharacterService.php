@@ -63,6 +63,17 @@ class CharacterService implements CharacterServiceInterface
     /**
      * {@inheritdoc}
      */
+    public function delete(Character $character)
+    {
+        $this->em->remove($character);
+        $this->em->flush();
+        
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getAll(){
         $characterFinal = array();
         $characters = $this->characterRepository->findAll();
