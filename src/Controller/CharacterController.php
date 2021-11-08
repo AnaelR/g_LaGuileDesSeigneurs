@@ -38,6 +38,7 @@ class CharacterController extends AbstractController
     public function display(Character $character): JsonResponse
     {
         // dump($character);dd($character->toArray());
+        $this->denyAccessUnlessGranted('characterDisplay', $character);
         return new JsonResponse($character->toArray());
     }
 
@@ -50,6 +51,7 @@ class CharacterController extends AbstractController
 
     public function create()
     {
+        $this->denyAccessUnlessGranted('characterCreate');
         $character = $this->characterService->create();
         return new JsonResponse($character->toArray());
     }
