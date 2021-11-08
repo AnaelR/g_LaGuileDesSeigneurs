@@ -2,7 +2,9 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Character;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CharacterControllerTest extends WebTestCase
 {
