@@ -26,6 +26,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testCreate()
     {
+        $this->client->request('POST', '/character/create');
         $this->assertJsonResponse();
         $this->defineIdentifier();
         $this->assertIdentifier();
@@ -37,7 +38,6 @@ class CharacterControllerTest extends WebTestCase
     public function testDisplay()
     {
         $this->client->request('GET', '/character/display/' . self::$identifier);
-
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
@@ -52,7 +52,7 @@ class CharacterControllerTest extends WebTestCase
     public function testDelete() 
     {
         $this->client->request('DELETE', '/character/delete/' . self::$identifier);
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -115,7 +115,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function assertIdentifier()
     {
-        $this->assertArrayHasKey('identfier', $this->content);
+        $this->assertArrayHasKey('identifier', $this->content);
     }
 
     /**
