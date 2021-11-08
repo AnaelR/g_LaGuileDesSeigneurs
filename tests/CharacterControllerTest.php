@@ -10,6 +10,8 @@ class CharacterControllerTest extends WebTestCase
 {
 
     private $client;
+    private $content;
+    private static $identifier;
     /**
      * Test index
      */
@@ -20,13 +22,37 @@ class CharacterControllerTest extends WebTestCase
     }
 
     /**
+     * Test create
+     */
+    public function testCreate()
+    {
+        $this->assertJsonResponse();
+        $this->defineIdentifier();
+        $this->assertIdentifier();
+    }
+
+    /**
      * Test display
      */
     public function testDisplay()
     {
-        $this->client->request('GET', '/character/display/2cfd170cee19ff797265df8844c576c0e38aa630');
+        $this->client->request('GET', '/character/display/' . self::$identifier);
 
         $this->assertJsonResponse();
+        $this->assertIdentifier();
+    }
+
+    public function testModify()
+    {
+        $this->client->request('PUT', '/character/modify/' . self::$identifier);
+        $this->assertJsonResponse();
+        $this->assertIdentifier();
+    }
+
+    public function testDelete() 
+    {
+        $this->client->request('DELETE', '/character/delete/' . self::$identifier);
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -35,6 +61,7 @@ class CharacterControllerTest extends WebTestCase
     public function assertJsonResponse()
     {
         $response = $this->client->getResponse();
+        $this->content = json_decode($response->getContent(), true, 50);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), $response->headers);
     }
@@ -77,9 +104,25 @@ class CharacterControllerTest extends WebTestCase
     /**
      * test identifiant non existant
      */
-    public function testInexistingIdentifier(){
+    public function testInexistingIdentifier()
+    {
         $this->client->request('GET', '/character/display/error');
         $this->assertError404();
     }
 
+    /**
+     * Asserts that 'identifier' is present in the Response
+     */
+    public function assertIdentifier()
+    {
+        $this->assertArrayHasKey('identfier', $this->content);
+    }
+
+    /**
+     * Define identifier
+     */
+    public function defineIdentifier()
+    {
+        self::$identifier = $this->content['identifier'];
+    }
 }

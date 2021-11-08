@@ -17,3 +17,4 @@ interface CharacterServiceInterface{
 
     public function delete(Character $character);
 }
+
