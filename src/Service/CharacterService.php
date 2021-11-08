@@ -54,7 +54,8 @@ class CharacterService implements CharacterServiceInterface
             ->setKnowledge('Diplomatie')
             ->setIntelligence(110)
             ->setLife(13)
-            ->setImage('/images/gorthol.jpg');
+            ->setImage('/images/gorthol.jpg')
+            ->setModification(new \DateTime());
         $this->em->persist($character);
         $this->em->flush();
         return $character;
@@ -67,7 +68,7 @@ class CharacterService implements CharacterServiceInterface
     {
         $this->em->remove($character);
         $this->em->flush();
-        
+
         return true;
     }
 
