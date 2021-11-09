@@ -11,18 +11,21 @@ use App\Repository\CharacterRepository;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CharacterService implements CharacterServiceInterface
 {
     private $em;
     private $formFactory;
     private $characterRepository;
+    private $validator;
 
-    public function __construct(CharacterRepository $characterRepository, EntityManagerInterface $em, FormFactoryInterface $formFactory)
+    public function __construct(CharacterRepository $characterRepository, EntityManagerInterface $em, FormFactoryInterface $formFactory, ValidatorInterface $validator)
     {
         $this->characterRepository = $characterRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
+        $this->validator = $validator;
     }
 
     /**
@@ -35,7 +38,7 @@ class CharacterService implements CharacterServiceInterface
         $character
             ->setModification(new \DateTime());
 
-            
+
         $this->em->persist($character);
         $this->em->flush();
         return $character;
@@ -98,8 +101,7 @@ class CharacterService implements CharacterServiceInterface
         $character
             ->setIdentifier(hash('sha1', uniqid()))
             ->setCreation(new DateTime())
-            ->setModification(new DateTime())
-        ;
+            ->setModification(new DateTime());
         $this->submit($character, CharacterType::class, $data);
         $this->isEntityFilled($character);
 
@@ -114,16 +116,13 @@ class CharacterService implements CharacterServiceInterface
      */
     public function isEntityFilled(Character $character)
     {
-        if (null === $character->getKind() ||
-            null === $character->getName() ||
-            null === $character->getSurname() ||
-            null === $character->getIdentifier() ||
-            null === $character->getCreation() ||
-            null === $character->getModification()) {
-            throw new UnprocessableEntityHttpException('Missing data for Entity -> ' . json_encode($character->toArray()));
+        // $character->setIdentifier('badidentifier');
+        $errors = $this->validator->validate($character);
+        if (count($errors) > 0) {
+            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' . json_encode($character->toArray()));
         }
     }
-   
+
     /**
      * {@inheritdoc}
      */
@@ -138,7 +137,7 @@ class CharacterService implements CharacterServiceInterface
 
         //Submits form
         $form = $this->formFactory->create($formName, $character, ['csrf_protection' => false]);
-        $form->submit($dataArray, false);//With false, only submitted fields are validated
+        $form->submit($dataArray, false); //With false, only submitted fields are validated
 
         //Gets errors
         $errors = $form->getErrors();
