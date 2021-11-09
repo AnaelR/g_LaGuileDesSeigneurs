@@ -9,11 +9,15 @@ interface CharacterServiceInterface{
     /**
      * Create the character
      */
-    public function create();
+    public function create(string $data);
+
+    public function isEntityFilled(Character $character);
+
+    public function submit(Character $character, $formName, $date);
 
     public function getAll();
 
-    public function modify(Character $character);
+    public function modify(Character $character, string $data);
 
     public function delete(Character $character);
     

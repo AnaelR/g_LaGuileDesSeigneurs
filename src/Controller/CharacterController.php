@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\CharacterServiceInterface;
 use App\Entity\Character;
+use Symfony\Component\HttpFoundation\Request;
 
 class CharacterController extends AbstractController
 {
@@ -53,10 +54,11 @@ class CharacterController extends AbstractController
      * methods={"POST", "HEAD"})
      */
 
-    public function create()
+    public function create(Request $request)
     {
         $this->denyAccessUnlessGranted('characterCreate');
-        $character = $this->characterService->create();
+        // $character = $this->characterService->create();
+        $character = $this->characterService->create($request->getContent());
         return new JsonResponse($character->toArray());
     }
 
@@ -79,10 +81,10 @@ class CharacterController extends AbstractController
      * methods={"PUT", "HEAD"}
      * )
      */
-    public function modify(Character $character)
+    public function modify(Request $request, Character $character)
     {
         $this->denyAccessUnlessGranted('characterModify', $character);
-        $character = $this->characterService->modify($character);
+        $character = $this->characterService->modify($character, $request->getContent());
         return new JsonResponse($character->toArray());
     }
 
