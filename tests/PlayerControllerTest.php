@@ -26,7 +26,15 @@ class PlayerControllerTest extends WebTestCase
      */
     public function testCreate()
     {
-        $this->client->request('POST', '/player/create');
+        $this->client->request(
+            'POST',
+            '/player/create',
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{"firstname":"Robert","lastname":"Gaspard","pseudo":"Krobard","email":"test@test.fr","mirian":340}'
+        );
+
         $this->assertJsonResponse();
         $this->defineIdentifier();
         $this->assertIdentifier();
@@ -44,7 +52,27 @@ class PlayerControllerTest extends WebTestCase
 
     public function testModify()
     {
-        $this->client->request('PUT', '/player/modify/' . self::$identifier);
+        $this->client->request(
+            'PUT',
+            '/player/modify/' . self::$identifier,
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{"firstname":"Roberto","name":"Jean"}'
+        );
+
+        $this->assertJsonResponse();
+        $this->assertIdentifier();
+
+        $this->client->request(
+            'PUT',
+            '/player/modify/' . self::$identifier,
+            array(),
+            array(),
+            array('CONTENT_TYPE' => 'application/json'),
+            '{"firstname":"Robert","lastname":"Gaspard","pseudo":"Krobard","email":"test@test.fr","mirian":340}'
+        );
+
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
