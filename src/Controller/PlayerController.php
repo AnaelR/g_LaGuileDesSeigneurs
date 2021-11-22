@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\PlayerServiceInterface;
 use App\Entity\Player;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+
 
 
 class PlayerController extends AbstractController
@@ -27,8 +29,8 @@ class PlayerController extends AbstractController
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('playerIndex', null);
-        $player = $this->playerService->getAll();
-        return new JsonResponse($player);
+        $players = $this->playerService->getAll();
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($players));
         // return $this->json([
         //     'message' => 'Welcome to your new controller!',
         //     'path' => 'src/Controller/PlayerController.php',
@@ -40,12 +42,13 @@ class PlayerController extends AbstractController
      * name="player_display",
      * requirements={"identifier": "^([a-z0-9]{40})$"},
      * methods={"GET","HEAD"})
+     * @Entity("player", expr="repository.findOneByIdentifier(identifier)")
      */
     public function display(Player $player): JsonResponse
     {
         // dump($player);dd($player->toArray());
         $this->denyAccessUnlessGranted('playerDisplay', $player);
-        return new JsonResponse($player->toArray());
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
     //CREATE
@@ -60,7 +63,7 @@ class PlayerController extends AbstractController
         $this->denyAccessUnlessGranted('playerCreate');
         // $player = $this->playerService->create();
         $player = $this->playerService->create($request->getContent());
-        return new JsonResponse($player->toArray());
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
     /**
@@ -86,7 +89,7 @@ class PlayerController extends AbstractController
     {
         $this->denyAccessUnlessGranted('playerModify', $player);
         $player = $this->playerService->modify($player, $request->getContent());
-        return new JsonResponse($player->toArray());
+        return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
     

@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\CharacterServiceInterface;
 use App\Entity\Character;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 class CharacterController extends AbstractController
 {
@@ -26,8 +27,8 @@ class CharacterController extends AbstractController
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('characterIndex', null);
-        $character = $this->characterService->getAll();
-        return new JsonResponse($character);
+        $characters = $this->characterService->getAll();
+        return JsonResponse::fromJsonString($this->characterService->serializeJson($characters));
         // return $this->json([
         //     'message' => 'Welcome to your new controller!',
         //     'path' => 'src/Controller/CharacterController.php',
@@ -39,12 +40,13 @@ class CharacterController extends AbstractController
      * name="character_display",
      * requirements={"identifier": "^([a-z0-9]{40})$"},
      * methods={"GET","HEAD"})
+     * @Entity("character", expr="repository.findOneByIdentifier(identifier)")
      */
     public function display(Character $character): JsonResponse
     {
         // dump($character);dd($character->toArray());
         $this->denyAccessUnlessGranted('characterDisplay', $character);
-        return new JsonResponse($character->toArray());
+        return JsonResponse::fromJsonString($this->characterService->serializeJson($character));
     }
 
     //CREATE
@@ -59,7 +61,7 @@ class CharacterController extends AbstractController
         $this->denyAccessUnlessGranted('characterCreate');
         // $character = $this->characterService->create();
         $character = $this->characterService->create($request->getContent());
-        return new JsonResponse($character->toArray());
+        return JsonResponse::fromJsonString($this->characterService->serializeJson($character));
     }
 
     /**
@@ -85,7 +87,7 @@ class CharacterController extends AbstractController
     {
         $this->denyAccessUnlessGranted('characterModify', $character);
         $character = $this->characterService->modify($character, $request->getContent());
-        return new JsonResponse($character->toArray());
+        return JsonResponse::fromJsonString($this->characterService->serializeJson($character));
     }
 
 

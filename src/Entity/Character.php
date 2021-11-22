@@ -100,6 +100,11 @@ class Character
     private $modification;
 
     /**
+     * @ORM\ManyToOne(targetEntity=Player::class, inversedBy="player")
+     */
+    private $player;
+
+    /**
      * Converts the entity in an Array
      */
     public function toArray()
@@ -240,6 +245,18 @@ class Character
     public function setModification(?\DateTimeInterface $modification): self
     {
         $this->modification = $modification;
+
+        return $this;
+    }
+
+    public function getPlayer(): ?Player
+    {
+        return $this->player;
+    }
+
+    public function setPlayer(?Player $player): self
+    {
+        $this->player = $player;
 
         return $this;
     }

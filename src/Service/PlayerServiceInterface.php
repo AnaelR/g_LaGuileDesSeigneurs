@@ -15,4 +15,6 @@ interface PlayerServiceInterface{
     public function modify(Player $player, string $data);
 
     public function delete(Player $player);
+
+    public function serializeJson($data);
 }
