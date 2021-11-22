@@ -11,11 +11,8 @@ use App\Entity\Player;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
-
-
 class PlayerController extends AbstractController
 {
-
     private $playerService;
 
     public function __construct(PlayerServiceInterface $playerService)
@@ -92,7 +89,7 @@ class PlayerController extends AbstractController
         return JsonResponse::fromJsonString($this->playerService->serializeJson($player));
     }
 
-    
+
     //DELTE
     /**
      * @Route ("/player/delete/{identifier}",

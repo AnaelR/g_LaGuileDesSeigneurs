@@ -4,8 +4,8 @@ namespace App\Service;
 
 use App\Entity\Character;
 
-
-interface CharacterServiceInterface{
+interface CharacterServiceInterface
+{
     /**
      * Create the character
      */
@@ -20,11 +20,8 @@ interface CharacterServiceInterface{
     public function modify(Character $character, string $data);
 
     public function delete(Character $character);
-    
+
     public function getImages(int $number, ?string $kind = null);
 
     public function serializeJson($data);
-
-
 }
-

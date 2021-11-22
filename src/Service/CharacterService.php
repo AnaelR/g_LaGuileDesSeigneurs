@@ -18,7 +18,6 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
-
 class CharacterService implements CharacterServiceInterface
 {
     private $em;
@@ -120,7 +119,7 @@ class CharacterService implements CharacterServiceInterface
         // $character->setIdentifier('badidentifier');
         $errors = $this->validator->validate($character);
         if (count($errors) > 0) {
-            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' . json_encode($character->toArray()));
+            throw new UnprocessableEntityHttpException((string) $errors . 'Missing data for Entity -> ' .$this->serializeJson($character));
         }
     }
 
@@ -147,7 +146,7 @@ class CharacterService implements CharacterServiceInterface
         }
     }
 
-        /**
+    /**
      * {@inheritdoc}
      */
     public function serializeJson($data)

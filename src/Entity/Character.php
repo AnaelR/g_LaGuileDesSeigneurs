@@ -6,7 +6,6 @@ use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * @ORM\Table(name="characters")
  * @ORM\Entity(repositoryClass=CharacterRepository::class)

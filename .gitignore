@@ -17,3 +17,4 @@
 
 ### Custom ###
 /public/images
+/tools/php-cs-fixer/vendor

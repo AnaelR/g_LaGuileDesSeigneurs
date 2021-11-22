@@ -13,7 +13,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 class CharacterController extends AbstractController
 {
-
     private $characterService;
 
     public function __construct(CharacterServiceInterface $characterService)
@@ -109,7 +108,7 @@ class CharacterController extends AbstractController
     //IMAGES
     /**
      * Returns images randomly
-     * 
+     *
      * @Route("/character/images/{number}",
      * name="character_images",
      * requirements={"identifier": "^([0-9]{1,2})$"},
@@ -126,7 +125,7 @@ class CharacterController extends AbstractController
 
     /**
      * Returns images of specific kind
-     * 
+     *
      * @Route("/character/images/{kind}/{number}",
      * name="character_imagesKind",
      * requirements={"identifier": "^([a-z0-9]{40})$"},

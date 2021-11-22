@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * @ORM\Table(name="Player")
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
@@ -68,7 +67,7 @@ class Player
 
     public function __construct()
     {
-        $this->player = new ArrayCollection();
+        $this->characters = new ArrayCollection();
     }
 
     /**
@@ -201,7 +200,7 @@ class Player
 
     public function removeCharacter(Character $character): self
     {
-        if ($this->player->removeElement($character)) {
+        if ($this->characters->removeElement($character)) {
             // set the owning side to null (unless already changed)
             if ($character->getPlayer() === $this) {
                 $character->setPlayer(null);

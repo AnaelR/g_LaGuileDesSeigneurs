@@ -19,8 +19,6 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class PlayerService implements PlayerServiceInterface
 {
-
-
     private $em;
     private $formFactory;
     private $playerRepository;
@@ -56,17 +54,10 @@ class PlayerService implements PlayerServiceInterface
      */
     public function isEntityFilled(Player $player)
     {
-        if (
-            null === $player->getFirstname() ||
-            null === $player->getLastname() ||
-            null === $player->getPseudo() ||
-            null === $player->getEmail() ||
-            null === $player->getMirian() ||
-            null === $player->getIdentifier() ||
-            null === $player->getCreation() ||
-            null === $player->getModification()
+        $errors = $this->validator->validate($player);
+        if ( count($errors) > 0
         ) {
-            throw new UnprocessableEntityHttpException('Missing data for Entity -> ' . json_encode($player->toArray()));
+            throw new UnprocessableEntityHttpException('Missing data for Entity -> ' .$this->serializeJson($player));
         }
     }
 

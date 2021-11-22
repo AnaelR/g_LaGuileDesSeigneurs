@@ -14,7 +14,7 @@ class AppFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
 
-        for ($i = 0; $i > 10; $i++){
+        for ($i = 0; $i > 10; $i++) {
             $character = new Character();
             $character
                 ->setKind('Dame')
@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
                 ->setImage('/images/eldalote.jpg')
                 ->setCreation(new \DateTime());
 
-                $manager->persist($character);
+            $manager->persist($character);
         }
         $manager->flush();
     }

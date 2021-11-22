@@ -4,8 +4,8 @@ namespace App\Service;
 
 use App\Entity\Player;
 
-interface PlayerServiceInterface{
-
+interface PlayerServiceInterface
+{
     public function create(string $data);
 
     public function submit(Player $player, $formName, $date);
