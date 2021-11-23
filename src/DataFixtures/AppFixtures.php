@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Character;
+use App\Entity\Player;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use DateTime;
@@ -14,20 +15,37 @@ class AppFixtures extends Fixture
         // $product = new Product();
         // $manager->persist($product);
 
-        for ($i = 0; $i > 10; $i++) {
+        for ($i=0; $i < 10; $i++) {
             $character = new Character();
             $character
-                ->setKind('Dame')
-                ->setName('Eldalote')
+                ->setKind(rand(0, 1) ? 'Dame' : 'Seigneur')
+                ->setName('Eldaloté' . $i)
                 ->setSurname('Fleur elfique')
                 ->setCaste('Elfe')
                 ->setKnowledge('Arts')
-                ->setIntelligence(120)
-                ->setLife(12)
+                ->setIntelligence(mt_rand(100, 200))
+                ->setLife(mt_rand(10, 20))
                 ->setImage('/images/eldalote.jpg')
-                ->setCreation(new \DateTime());
-
+                ->setCreation(new DateTime())
+                ->setIdentifier(hash('sha1', uniqid()))
+                ->setModification(new DateTime())
+            ;
             $manager->persist($character);
+        }
+
+        for ($i=0; $i < 10; $i++) {
+            $player = new Player();
+            $player
+                ->setFirstname('Léo')
+                ->setLastname('Dubois')
+                ->setEmail('duboisl@gmail.com')
+                ->setMirian(280)
+                ->setPseudo('Leo_Knight')
+                ->setCreation(new DateTime())
+                ->setModification(new DateTime())
+                ->setIdentifier(hash('sha1', uniqid()))
+            ;
+            $manager->persist($player);
         }
         $manager->flush();
     }
