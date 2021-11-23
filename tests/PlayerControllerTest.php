@@ -2,11 +2,11 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Character;
+use App\Entity\Player;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class CharacterControllerTest extends WebTestCase
+class PlayerControllerTest extends WebTestCase
 {
 
     private $client;
@@ -17,7 +17,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testIndex(): void
     {
-        $this->client->request('GET', '/character/index');
+        $this->client->request('GET', '/player/index');
         $this->assertJsonResponse();
     }
 
@@ -28,13 +28,13 @@ class CharacterControllerTest extends WebTestCase
     {
         $this->client->request(
             'POST',
-            '/character/create',
+            '/player/create',
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
-            '{"kind":"Dame","name":"Eldalótë","surname":"Fleur elfique","caste":"Elfe","knowledge":"Arts","intelligence":120,"life":12,"image":"/images/eldalote.jpg"}'
+            '{"firstname":"Robert","lastname":"Gaspard","pseudo":"Krobard","email":"test@test.fr","mirian":340}'
         );
-        // dd($this->client->getResponse());
+
         $this->assertJsonResponse();
         $this->defineIdentifier();
         $this->assertIdentifier();
@@ -45,7 +45,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testDisplay()
     {
-        $this->client->request('GET', '/character/display/' . self::$identifier);
+        $this->client->request('GET', '/player/display/' . self::$identifier);
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
@@ -54,11 +54,11 @@ class CharacterControllerTest extends WebTestCase
     {
         $this->client->request(
             'PUT',
-            '/character/modify/' . self::$identifier,
+            '/player/modify/' . self::$identifier,
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
-            '{"kind":"Seigneur","name":"Gorthol"}'
+            '{"firstname":"Roberto","name":"Jean"}'
         );
 
         $this->assertJsonResponse();
@@ -66,20 +66,20 @@ class CharacterControllerTest extends WebTestCase
 
         $this->client->request(
             'PUT',
-            '/character/modify/' . self::$identifier,
+            '/player/modify/' . self::$identifier,
             array(),
             array(),
             array('CONTENT_TYPE' => 'application/json'),
-            '{"kind":"Dame","name":"Eldalótë","surname":"Fleur elfique","caste":"Elfe","knowledge":"Arts","intelligence":120,"life":12,"image":"/images/eldalote.jpg"}'
+            '{"firstname":"Robert","lastname":"Gaspard","pseudo":"Krobard","email":"test@test.fr","mirian":340}'
         );
 
         $this->assertJsonResponse();
         $this->assertIdentifier();
     }
 
-    public function testDelete()
+    public function testDelete() 
     {
-        $this->client->request('DELETE', '/character/delete/' . self::$identifier);
+        $this->client->request('DELETE', '/player/delete/' . self::$identifier);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -99,7 +99,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testRedirectIndex()
     {
-        $this->client->request('GET', '/character');
+        $this->client->request('GET', '/player');
 
         $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
     }
@@ -117,7 +117,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testBadidentifier()
     {
-        $this->client->request('GET', '/character/display/badIdentifier');
+        $this->client->request('GET', '/player/display/badIdentifier');
         $this->assertError404();
     }
 
@@ -134,7 +134,7 @@ class CharacterControllerTest extends WebTestCase
      */
     public function testInexistingIdentifier()
     {
-        $this->client->request('GET', '/character/display/error');
+        $this->client->request('GET', '/player/display/error');
         $this->assertError404();
     }
 
@@ -152,29 +152,5 @@ class CharacterControllerTest extends WebTestCase
     public function defineIdentifier()
     {
         self::$identifier = $this->content['identifier'];
-    }
-
-    /**
-     * test images
-     */
-
-    public function testImages()
-    {
-        //Tests without kind
-        $this->client->request('GET', '/character/images/3');
-        $this->assertJsonResponse();
-
-        //Tests with kind
-        $this->client->request('GET', '/character/images/dames/3');
-        $this->assertJsonResponse();
-
-        $this->client->request('GET', '/character/images/ennemis/3');
-        $this->assertJsonResponse();
-
-        $this->client->request('GET', '/character/images/ennemies/3');
-        $this->assertJsonResponse();
-
-        $this->client->request('GET', '/character/images/seigneurs/3');
-        $this->assertJsonResponse();
     }
 }
