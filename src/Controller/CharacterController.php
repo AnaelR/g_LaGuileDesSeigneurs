@@ -10,6 +10,8 @@ use App\Service\CharacterServiceInterface;
 use App\Entity\Character;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 
 class CharacterController extends AbstractController
 {
@@ -40,6 +42,31 @@ class CharacterController extends AbstractController
      * requirements={"identifier": "^([a-z0-9]{40})$"},
      * methods={"GET","HEAD"})
      * @Entity("character", expr="repository.findOneByIdentifier(identifier)")
+     * 
+     * @OA\Parameter(
+     * name="identifier",
+     * in="path",
+     * description="identifier for the Character",
+     * required=true,
+     * )
+     * 
+     * @OA\Response(
+     * response=200,
+     * description="Success",
+     * @Model(type=Character::class)
+     * )
+     * 
+     * @OA\Response(
+     * response=403,
+     * description="Access denied",
+     * )
+     * 
+     * @OA\Response(
+     * response=404,
+     * description="Not Found",
+     * )
+     * 
+     * @OA\Tag(name="Character")
      */
     public function display(Character $character): JsonResponse
     {
