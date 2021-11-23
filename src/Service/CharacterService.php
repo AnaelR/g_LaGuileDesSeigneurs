@@ -17,6 +17,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use App\Event\CharacterEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CharacterService implements CharacterServiceInterface
 {
@@ -24,13 +27,15 @@ class CharacterService implements CharacterServiceInterface
     private $formFactory;
     private $characterRepository;
     private $validator;
+    private $dispatcher;
 
-    public function __construct(CharacterRepository $characterRepository, EntityManagerInterface $em, FormFactoryInterface $formFactory, ValidatorInterface $validator)
+    public function __construct(CharacterRepository $characterRepository, EntityManagerInterface $em, FormFactoryInterface $formFactory, ValidatorInterface $validator, EventDispatcherInterface $dispatcher)
     {
         $this->characterRepository = $characterRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->validator = $validator;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -107,6 +112,14 @@ class CharacterService implements CharacterServiceInterface
 
         $this->em->persist($character);
         $this->em->flush();
+        $this->submit($character, CharacterType::class, $data);
+
+        //Dispatch event
+        dump($character);
+        $event = new CharacterEvent($character);
+        $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
+        dump($character);
+        dd('here');
 
         return $character;
     }
