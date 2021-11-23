@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste de personnages{% endblock %}
+
+{% block body %}
+    <h1>Character index</h1>
+
+    <table class="table table-hover">
+        <thead class="text-center">
+            <tr>
+                <th>Kind</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Caste</th>
+                <th>Knowledge</th>
+                <th>Intelligence</th>
+                <th>Life</th>
+                <th>Creation</th>
+                <th>Modification</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        {# Début du tableau #}
+        <tbody class="text-center">
+        {% for character in characters %}
+            <tr>
+                <td>
+                    {% if character.kind == "Dame" %}
+                        <strong>{{ character.kind }}</strong>
+                    {% else %}
+                        {{ character.kind }}
+                    {% endif %}
+                </td>
+                <td>{{ character.id }}</td>
+                {# Lien pour accéder au charactère #}
+                <td><a href="{{ path('character_html_show', {'id': character.id}) }}">{{ character.name }}</a></td>
+                <td>{{ character.surname }}</td>
+                <td>{{ character.caste }}</td>
+                <td>{{ character.knowledge }}</td>
+                <td>{{ character.intelligence }}</td>
+                <td>{{ character.life }}</td>
+                <td>{{ character.image }}</td>
+                <td>{{ character.creation ? character.creation|date('d-m-Y H:i:s') : '' }}</td>
+                <td>{{ character.modification ? character.modification|date('d-m-Y H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('character_html_edit', {'id': character.id}) }}">modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-success" href="{{ path('character_html_new') }}">Nouveau Character</a>
+{% endblock %}
