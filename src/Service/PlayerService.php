@@ -17,6 +17,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use App\Event\PlayerEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PlayerService implements PlayerServiceInterface
 {
@@ -24,15 +27,16 @@ class PlayerService implements PlayerServiceInterface
     private $formFactory;
     private $playerRepository;
     private $validator;
+    private $dispatcher;
 
 
-    public function __construct(PlayerRepository $playerRepository, EntityManagerInterface $em, FormFactoryInterface $formFactory,  ValidatorInterface $validator)
+    public function __construct(PlayerRepository $playerRepository, EntityManagerInterface $em, FormFactoryInterface $formFactory,  ValidatorInterface $validator, EventDispatcherInterface $dispatcher)
     {
         $this->playerRepository = $playerRepository;
         $this->em = $em;
         $this->formFactory = $formFactory;
         $this->validator = $validator;
-
+        $this->dispatcher = $dispatcher;
     }
     /**
      * {@inheritdoc}
@@ -103,6 +107,14 @@ class PlayerService implements PlayerServiceInterface
             ->setModification(new \DateTime());
         $this->em->persist($player);
         $this->em->flush();
+        $this->submit($player, PlayerType::class, $data);
+
+        //Dispatch event
+        dump($player);
+        $event = new PlayerEvent($player);
+        $this->dispatcher->dispatch($event, PlayerEvent::PLAYER_MODIFIED);
+        dump($player);
+        dd('here');
         return $player;
     }
 
