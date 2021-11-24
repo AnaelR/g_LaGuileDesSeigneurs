@@ -155,12 +155,30 @@ class CharacterControllerTest extends WebTestCase
     }
 
     /**
-     * Show characters by level
+     * Show characters by level of intelligence in API
      */
     public function testGetLevelOfIntelligence()
     {
         $this->client->request('GET', '/character/intelligence/100');
         $this->assertJsonResponse();
+    }
+
+    /**
+     * Show characters by level of intelligence in HTML
+     */
+    public function testGetLevelOfIntelligenceHtml()
+    {
+        $this->client->request('GET', '/character/html/intelligence/100');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Show characters by level of intelligence in HTML
+     */
+    public function testGetLevelOfIntelligenceApiHtml()
+    {
+        $this->client->request('GET', '/character/api-html/intelligence/100');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     /**
