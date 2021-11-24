@@ -31,7 +31,6 @@
                         {{ character.kind }}
                     {% endif %}
                 </td>
-                <td>{{ character.id }}</td>
                 {# Lien pour accéder au charactère #}
                 <td><a href="{{ path('character_html_show', {'id': character.id}) }}">{{ character.name }}</a></td>
                 <td>{{ character.surname }}</td>
@@ -39,7 +38,6 @@
                 <td>{{ character.knowledge }}</td>
                 <td>{{ character.intelligence }}</td>
                 <td>{{ character.life }}</td>
-                <td>{{ character.image }}</td>
                 <td>{{ character.creation ? character.creation|date('d-m-Y H:i:s') : '' }}</td>
                 <td>{{ character.modification ? character.modification|date('d-m-Y H:i:s') : '' }}</td>
                 <td>

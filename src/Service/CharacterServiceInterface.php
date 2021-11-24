@@ -24,4 +24,8 @@ interface CharacterServiceInterface
     public function getImages(int $number, ?string $kind = null);
 
     public function serializeJson($data);
+
+    public function createFromHtml(Character $character);
+
+    public function modifyFromHtml(Character $character);
 }
