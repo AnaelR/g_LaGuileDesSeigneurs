@@ -99,7 +99,7 @@ class Character
     private $modification;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Player::class, inversedBy="player")
+     * @ORM\ManyToOne(targetEntity=Player::class, inversedBy="characters")
      */
     private $player;
 

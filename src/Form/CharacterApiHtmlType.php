@@ -9,28 +9,28 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-
-class CharacterHtmlType extends AbstractType
+class CharacterApiHtmlType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', TextType::class)
             ->add('surname', TextType::class)
+            ->add('kind', TextType::class)
+            ->add('caste', TextType::class, array(
+                'required' => false,
+                'help' => 'Caste du Character',
+            ))
             ->add('knowledge', TextType::class, array(
                 'required' => false,
             ))
             ->add('intelligence', IntegerType::class, array(
                 'required' => false,
-                'help' => 'Niveau de d\'intelligence (1-250)',
+                'help' => 'Niveau d\'intelligence du Character (1-250)',
                 'attr' => array(
                     'min' => 1,
                     'max' => 250,
-                )
-            ))
-            ->add('caste', TextType::class, array(
-                'required' => false,
-                'help' => 'Caste du character'
+                ),
             ))
             ->add('life', IntegerType::class, array(
                 'required' => false,
@@ -38,16 +38,16 @@ class CharacterHtmlType extends AbstractType
                 'attr' => array(
                     'min' => 1,
                     'max' => 250,
-                    'placeholder' => 'Niveau de vie du Character (1-250)'
-                )
+                    'placeholder' => 'Niveau de vie du Character (1-250)',
+                ),
             ))
             ->add('image', TextType::class, array(
-                'required' => false
+                'required' => false,
             ))
-            ->add('kind', TextType::class);
+        ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => null,

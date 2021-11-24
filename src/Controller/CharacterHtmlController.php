@@ -5,12 +5,12 @@ namespace App\Controller;
 use App\Entity\Character;
 use App\Form\CharacterHtmlType;
 use App\Repository\CharacterRepository;
+use App\Service\CharacterServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\CharacterServiceInterface;
 
 /**
  * @Route("/character/html")
@@ -23,6 +23,7 @@ class CharacterHtmlController extends AbstractController
     {
         $this->characterService = $characterService;
     }
+
 
     /**
      * @Route("/", name="character_html_index", methods={"GET"})
@@ -37,9 +38,8 @@ class CharacterHtmlController extends AbstractController
     /**
      * @Route("/new", name="character_html_new", methods={"GET", "POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-
         $this->denyAccessUnlessGranted('characterCreate', null);
 
         $character = new Character();
@@ -49,7 +49,9 @@ class CharacterHtmlController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->characterService->createFromHtml($character);
 
-            return $this->redirectToRoute('character_html_show', array('id'=>$character->getId()));
+            return $this->redirectToRoute('character_html_show',array(
+                'id'=>$character->getId(),
+            ));
         }
 
         return $this->renderForm('character_html/new.html.twig', [
@@ -71,11 +73,9 @@ class CharacterHtmlController extends AbstractController
     /**
      * @Route("/{id}/edit", name="character_html_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Character $character): Response
+    public function edit(Request $request, Character $character, EntityManagerInterface $entityManager): Response
     {
-
         $this->denyAccessUnlessGranted('characterModify', $character);
-
         $form = $this->createForm(CharacterHtmlType::class, $character);
         $form->handleRequest($request);
 
@@ -83,7 +83,7 @@ class CharacterHtmlController extends AbstractController
             $this->characterService->modifyFromHtml($character);
 
             return $this->redirectToRoute('character_html_show', array(
-                'id' => $character->getId()
+                'id'=>$character->getId(),
             ));
         }
 
