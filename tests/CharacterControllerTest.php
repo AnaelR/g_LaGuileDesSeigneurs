@@ -155,6 +155,15 @@ class CharacterControllerTest extends WebTestCase
     }
 
     /**
+     * Show characters by level
+     */
+    public function testGetLevelOfIntelligence()
+    {
+        $this->client->request('GET', '/character/intelligence/100');
+        $this->assertJsonResponse();
+    }
+
+    /**
      * test images
      */
 

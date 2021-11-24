@@ -44,6 +44,12 @@ class CharacterService implements CharacterServiceInterface
     public function modify(Character $character, string $data)
     {
         $this->submit($character, CharacterType::class, $data);
+        
+        return $this->modifyFromHtml($character);
+    }
+
+    public function modifyFromHtml(Character $character)
+    {
         $this->isEntityFilled($character);
         $character
             ->setModification(new \DateTime());
@@ -71,6 +77,14 @@ class CharacterService implements CharacterServiceInterface
     public function getAll()
     {
         return $this->characterRepository->findAll();
+    }
+
+        /**
+     * {@inheritdoc}
+     */
+    public function getByIntelligence(int $level)
+    {
+        return $this->characterRepository->findByIntelligence($level);
     }
 
     /**
@@ -103,23 +117,24 @@ class CharacterService implements CharacterServiceInterface
     {
         //Use with {"kind":"Dame","name":"Eldalótë","surname":"Fleur elfique","caste":"Elfe","knowledge":"Arts","intelligence":120,"life":12,"image":"/images/eldalote.jpg"}
         $character = new Character();
+        $this->submit($character, CharacterType::class, $data);
+
+        return $this->createFromHtml($character);
+    }
+
+    public function createFromHtml(Character $character)
+    {
         $character
             ->setIdentifier(hash('sha1', uniqid()))
             ->setCreation(new DateTime())
             ->setModification(new DateTime());
-        $this->submit($character, CharacterType::class, $data);
         $this->isEntityFilled($character);
 
         $this->em->persist($character);
         $this->em->flush();
-        $this->submit($character, CharacterType::class, $data);
-
         //Dispatch event
-        dump($character);
         $event = new CharacterEvent($character);
         $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
-        dump($character);
-        dd('here');
 
         return $character;
     }
