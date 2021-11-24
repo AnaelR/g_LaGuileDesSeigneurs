@@ -138,10 +138,12 @@ class CharacterApiHtmlController extends AbstractController
      */
     public function intelligenceLevel(int $level)
     {
-        $this->denyAccessUnlessGranted('characterIndex', null);
-
+        $response = $this->client->request(
+            'GET',
+            'http://laguildedesseigneurs/public/character/intelligence/'.$level
+        );
         return $this->render('character_api_html/index.html.twig', [
-            'characters' => $this->characterService->getAllByIntelligenceLevel($level),
+            'characters' => $response->toArray(),
         ]);
     }
 }

@@ -28,4 +28,7 @@ interface CharacterServiceInterface
     public function createFromHtml(Character $character);
 
     public function modifyFromHtml(Character $character);
+
+    public function getByIntelligence(int $level);
+
 }

@@ -35,6 +35,16 @@ class CharacterHtmlController extends AbstractController
         ]);
     }
 
+        /**
+     * @Route("/intelligence/{level}", name="character_html_intelligence", methods={"GET"})
+     */
+    public function intelligence(CharacterRepository $characterRepository, int $level): Response
+    {
+        return $this->render('character_html/index.html.twig', [
+            'characters' => $characterRepository->findByIntelligence($level),
+        ]);
+    }
+
     /**
      * @Route("/new", name="character_html_new", methods={"GET", "POST"})
      */

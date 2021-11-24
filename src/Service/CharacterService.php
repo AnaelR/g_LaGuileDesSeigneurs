@@ -79,6 +79,14 @@ class CharacterService implements CharacterServiceInterface
         return $this->characterRepository->findAll();
     }
 
+        /**
+     * {@inheritdoc}
+     */
+    public function getByIntelligence(int $level)
+    {
+        return $this->characterRepository->findByIntelligence($level);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -116,8 +124,6 @@ class CharacterService implements CharacterServiceInterface
 
     public function createFromHtml(Character $character)
     {
-        dump($character);
-        dd('here');
         $character
             ->setIdentifier(hash('sha1', uniqid()))
             ->setCreation(new DateTime())
@@ -127,11 +133,8 @@ class CharacterService implements CharacterServiceInterface
         $this->em->persist($character);
         $this->em->flush();
         //Dispatch event
-        dump($character);
         $event = new CharacterEvent($character);
         $this->dispatcher->dispatch($event, CharacterEvent::CHARACTER_CREATED);
-        dump($character);
-        dd('here');
 
         return $character;
     }
